@@ -1,14 +1,17 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { stripe } from "../../lib/stripe";
+import { useState } from "react";
+import Image from "next/future/image";
+import Head from "next/head";
 import Stripe from "stripe";
+import axios from "axios";
+
+import { stripe } from "../../lib/stripe";
+
 import {
   ImageContainer,
   ProductContainer,
   ProductDetails,
 } from "../../styles/pages/product";
-import Image from "next/future/image";
-import axios from "axios";
-import { useState } from "react";
 
 interface ProductProps {
   product: {
@@ -46,22 +49,30 @@ export default function Product({ product }: ProductProps) {
   }
 
   return (
-    <ProductContainer>
-      <ImageContainer>
-        <Image src={product.imageUrl} width={520} height={480} alt="" />
-      </ImageContainer>
+    <>
+      <Head>
+        <title>{product.name}</title>
+      </Head>
+      <ProductContainer>
+        <ImageContainer>
+          <Image src={product.imageUrl} width={520} height={480} alt="" />
+        </ImageContainer>
 
-      <ProductDetails>
-        <h1>{product.name}</h1>
-        <span>{product.price}</span>
+        <ProductDetails>
+          <h1>{product.name}</h1>
+          <span>{product.price}</span>
 
-        <p>{product.description}</p>
+          <p>{product.description}</p>
 
-        <button onClick={handleBuyProduct} disabled={isCreatingCheckoutSession}>
-          Comprar agora
-        </button>
-      </ProductDetails>
-    </ProductContainer>
+          <button
+            onClick={handleBuyProduct}
+            disabled={isCreatingCheckoutSession}
+          >
+            Comprar agora
+          </button>
+        </ProductDetails>
+      </ProductContainer>
+    </>
   );
 }
 
