@@ -1,6 +1,12 @@
 import { useKeenSlider } from "keen-slider/react";
-import { HomeContainer, Product } from "../styles/pages/home";
+import {
+  ButtonLeft,
+  ButtonRight,
+  HomeContainer,
+  Product,
+} from "../styles/pages/home";
 import { GetStaticProps } from "next";
+import { Handbag, CaretLeft, CaretRight } from "phosphor-react";
 import Image from "next/future/image";
 import Link from "next/link";
 import Head from "next/head";
@@ -9,6 +15,7 @@ import Stripe from "stripe";
 import { stripe } from "../lib/stripe";
 
 import "keen-slider/keen-slider.min.css";
+import { useState } from "react";
 
 interface HomeProps {
   products: {
@@ -20,10 +27,15 @@ interface HomeProps {
 }
 
 export default function Home({ products }: HomeProps) {
-  const [sliderRef] = useKeenSlider({
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [sliderRef, instanceRef] = useKeenSlider({
     slides: {
       perView: 3,
       spacing: 48,
+      origin: 0.09,
+    },
+    slideChanged(slider) {
+      setCurrentSlide(slider.track.details.rel);
     },
   });
 
@@ -45,14 +57,37 @@ export default function Home({ products }: HomeProps) {
                 <Image src={product.imageUrl} width={520} height={480} alt="" />
 
                 <footer>
-                  <strong>{product.name}</strong>
-                  <span>{product.price}</span>
+                  <div>
+                    <strong>{product.name}</strong>
+                    <span>{product.price}</span>
+                  </div>
+
+                  <button>
+                    <Handbag size={32} weight="bold" />
+                  </button>
                 </footer>
               </Product>
             </Link>
           );
         })}
       </HomeContainer>
+
+      <ButtonLeft
+        onClick={() => {
+          instanceRef.current.prev();
+        }}
+        disabled={currentSlide === 0}
+      >
+        <CaretLeft size={48} />
+      </ButtonLeft>
+      <ButtonRight
+        onClick={() => {
+          instanceRef.current.next();
+        }}
+        disabled={currentSlide === products.length - 1}
+      >
+        <CaretRight size={48} />
+      </ButtonRight>
     </>
   );
 }

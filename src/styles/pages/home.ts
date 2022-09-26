@@ -3,8 +3,6 @@ import { styled } from "..";
 export const HomeContainer = styled("main", {
   display: "flex",
   width: "100%",
-  maxWidth: "calc(100vw - ((100vw - 1080px) / 2))",
-  marginLeft: "auto",
   minHeight: 656,
 });
 
@@ -52,6 +50,29 @@ export const Product = styled("a", {
       fontWeight: "bold",
       color: "$green300",
     },
+
+    div: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.25rem",
+    },
+
+    button: {
+      border: 0,
+      backgroundColor: "$green500",
+      borderRadius: 6,
+      height: "3.5rem",
+      width: "3.5rem",
+      cursor: "pointer",
+
+      svg: {
+        color: "white",
+      },
+
+      "&:hover": {
+        backgroundColor: "$green300",
+      },
+    },
   },
 
   "&:hover": {
@@ -59,5 +80,39 @@ export const Product = styled("a", {
       transform: "translateY(0%)",
       opacity: 1,
     },
+  },
+});
+
+export const ButtonLeft = styled("button", {
+  position: "absolute",
+  top: "50%",
+  left: "1.5rem",
+
+  backgroundColor: "transparent",
+  border: 0,
+
+  svg: {
+    color: "$gray300",
+  },
+
+  "&:disabled": {
+    visibility: "hidden",
+  },
+});
+
+export const ButtonRight = styled("button", {
+  position: "absolute",
+  top: "50%",
+  right: "1.5rem",
+
+  backgroundColor: "transparent",
+  border: 0,
+
+  svg: {
+    color: "$gray300",
+  },
+
+  "&:disabled": {
+    visibility: "hidden",
   },
 });
