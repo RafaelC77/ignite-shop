@@ -6,6 +6,9 @@ import Stripe from "stripe";
 import { stripe } from "../lib/stripe";
 import { ImageContainer, SuccessContainer } from "../styles/pages/success";
 
+import logo from "../assets/logo.svg";
+import tee1 from "../assets/tees/1.png";
+
 interface SuccessProps {
   customerName: string;
   product: {
@@ -24,15 +27,25 @@ export default function Success({ customerName, product }: SuccessProps) {
       </Head>
 
       <SuccessContainer>
-        <h1>Compra Efetuada!</h1>
+        <Image src={logo} alt="" />
 
         <ImageContainer>
-          <Image src={product.imageUrl} width={120} height={110} alt="" />
+          <div>
+            <Image src={tee1} width={140} height={140} alt="" />
+          </div>
+          <div>
+            <Image src={tee1} width={140} height={140} alt="" />
+          </div>
+          <div>
+            <Image src={tee1} width={140} height={140} alt="" />
+          </div>
         </ImageContainer>
 
+        <h1>Compra Efetuada!</h1>
+
         <p>
-          Uhuul <strong>{customerName}</strong>, sua{" "}
-          <strong>{product.name}</strong> já está a caminho da sua casa.
+          Uhuul <strong>Fulano</strong>, sua compra de X camisetas sdgsf já está
+          a caminho da sua casa.
         </p>
 
         <Link href="/">Voltar ao catálogo</Link>
@@ -41,7 +54,7 @@ export default function Success({ customerName, product }: SuccessProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+/* export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   if (!query.session_id) {
     return {
       redirect: {
@@ -69,4 +82,4 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       },
     },
   };
-};
+}; */

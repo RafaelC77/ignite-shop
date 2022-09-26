@@ -1,3 +1,4 @@
+import { relative } from "path";
 import { styled } from "..";
 
 export const SuccessContainer = styled("main", {
@@ -6,11 +7,11 @@ export const SuccessContainer = styled("main", {
   alignItems: "center",
   justifyContent: "center",
   margin: "0 auto",
-  height: 656,
 
   h1: {
     fontSize: "$2xl",
     color: "$gray100",
+    marginTop: "3rem",
   },
 
   p: {
@@ -37,16 +38,23 @@ export const SuccessContainer = styled("main", {
 
 export const ImageContainer = styled("div", {
   width: "100%",
-  maxWidth: 130,
-  height: 145,
-  background: "linear-gradient(180deg, #1ea483 0%, #7465d4 100%)",
-  borderRadius: 8,
-  padding: "0.25rem",
-  marginTop: "4rem",
+  marginTop: "6.5rem",
 
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+
+  div: {
+    height: "8.75rem",
+    width: "8.75rem",
+    background: "linear-gradient(180deg, #1ea483 0%, #7465d4 100%)",
+    borderRadius: 999,
+    boxShadow: "0 0 60px rgba(0, 0, 0, 0.8)",
+  },
+
+  "div + div": {
+    marginLeft: "-3.5rem",
+  },
 
   img: {
     objectFit: "cover",
