@@ -2,7 +2,7 @@ import { useKeenSlider } from "keen-slider/react";
 import { GetStaticProps } from "next";
 import { Handbag, CaretLeft, CaretRight } from "phosphor-react";
 import { useShoppingCart } from "use-shopping-cart";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import Image from "next/future/image";
 import Link from "next/link";
 import Head from "next/head";
@@ -33,6 +33,7 @@ interface HomeProps {
 
 export default function Home({ products }: HomeProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { addItem } = useShoppingCart();
   const [sliderRef, instanceRef] = useKeenSlider({
     slides: {
       perView: 3,
@@ -43,8 +44,6 @@ export default function Home({ products }: HomeProps) {
       setCurrentSlide(slider.track.details.rel);
     },
   });
-
-  const { addItem } = useShoppingCart();
 
   return (
     <>
@@ -72,7 +71,9 @@ export default function Home({ products }: HomeProps) {
                   </div>
 
                   <button
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.preventDefault();
+
                       addItem({
                         name: product.name,
                         id: product.id,
@@ -80,8 +81,8 @@ export default function Home({ products }: HomeProps) {
                         price_id: product.defaultPriceId,
                         currency: "BRL",
                         image: product.imageUrl,
-                      })
-                    }
+                      });
+                    }}
                   >
                     <Handbag size={32} weight="bold" />
                   </button>
