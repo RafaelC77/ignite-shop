@@ -81,6 +81,10 @@ export const CartItemInfo = styled("div", {
     fontWeight: 700,
     width: "fit-content",
     cursor: "pointer",
+
+    "&:hover": {
+      color: "$green300",
+    },
   },
 });
 
@@ -129,6 +133,10 @@ export const CompleteOrder = styled("button", {
   fontSize: "1.125rem",
   fontWeight: 700,
   lineHeight: 1.6,
+
+  "&:hover": {
+    background: "$green300",
+  },
 });
 
 export const Overlay = styled("div", {

@@ -1,23 +1,31 @@
 import { GetServerSideProps } from "next";
+import { useEffect } from "react";
+import { useShoppingCart } from "use-shopping-cart";
 import Image from "next/future/image";
 import Head from "next/head";
 import Link from "next/link";
 import Stripe from "stripe";
-import { stripe } from "../lib/stripe";
-import { ImageContainer, SuccessContainer } from "../styles/pages/success";
 
+import { stripe } from "../lib/stripe";
 import logo from "../assets/logo.svg";
-import tee1 from "../assets/tees/1.png";
+
+import { ImageContainer, SuccessContainer } from "../styles/pages/success";
 
 interface SuccessProps {
   customerName: string;
-  product: {
+  products: {
     name: string;
     imageUrl: string;
-  };
+  }[];
 }
 
-export default function Success({ customerName, product }: SuccessProps) {
+export default function Success({ customerName, products }: SuccessProps) {
+  const { clearCart } = useShoppingCart();
+
+  useEffect(() => {
+    clearCart();
+  }, []);
+
   return (
     <>
       <Head>
@@ -30,22 +38,23 @@ export default function Success({ customerName, product }: SuccessProps) {
         <Image src={logo} alt="" />
 
         <ImageContainer>
-          <div>
-            <Image src={tee1} width={140} height={140} alt="" />
-          </div>
-          <div>
-            <Image src={tee1} width={140} height={140} alt="" />
-          </div>
-          <div>
-            <Image src={tee1} width={140} height={140} alt="" />
-          </div>
+          {products.map((product) => {
+            return (
+              <div key={product.name}>
+                <Image src={product.imageUrl} width={140} height={140} alt="" />
+              </div>
+            );
+          })}
         </ImageContainer>
 
         <h1>Compra Efetuada!</h1>
 
         <p>
-          Uhuul <strong>Fulano</strong>, sua compra de X camisetas sdgsf já está
-          a caminho da sua casa.
+          Uhuul <strong>{customerName}</strong>, sua compra de{" "}
+          {products.length <= 1
+            ? products[0].name
+            : `${products.length} camisetas`}{" "}
+          já está a caminho da sua casa.
         </p>
 
         <Link href="/">Voltar ao catálogo</Link>
@@ -54,7 +63,7 @@ export default function Success({ customerName, product }: SuccessProps) {
   );
 }
 
-/* export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   if (!query.session_id) {
     return {
       redirect: {
@@ -71,15 +80,19 @@ export default function Success({ customerName, product }: SuccessProps) {
   });
 
   const customerName = session.customer_details.name;
-  const product = session.line_items.data[0].price.product as Stripe.Product;
+  const products = session.line_items.data.map((item) => {
+    const prod = item.price.product as Stripe.Product;
+
+    return {
+      name: prod.name,
+      imageUrl: prod.images[0],
+    };
+  });
 
   return {
     props: {
       customerName,
-      product: {
-        name: product.name,
-        imageUrl: product.images[0],
-      },
+      products,
     },
   };
-}; */
+};

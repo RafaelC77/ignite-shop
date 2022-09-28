@@ -1,13 +1,17 @@
-import Image from "next/future/image";
-import Link from "next/link";
 import { Handbag } from "phosphor-react";
 import { useState } from "react";
-import logoImg from "../assets/logo.svg";
-import { HeaderContainer } from "../styles/pages/app";
+import { useShoppingCart } from "use-shopping-cart";
+import Image from "next/future/image";
+import Link from "next/link";
+
 import { Cart } from "./Cart";
+import logoImg from "../assets/logo.svg";
+
+import { HeaderContainer } from "../styles/pages/app";
 
 export function Header() {
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { cartCount } = useShoppingCart();
 
   function handleCloseCart() {
     setIsCartOpen(false);
@@ -23,9 +27,13 @@ export function Header() {
 
       <button onClick={() => setIsCartOpen(true)}>
         <Handbag size={24} weight="bold" />
-        <div>
-          <span>1</span>
-        </div>
+        {!!cartCount ? (
+          <div>
+            <span>{cartCount}</span>
+          </div>
+        ) : (
+          ""
+        )}
       </button>
 
       <Cart open={isCartOpen} onClose={handleCloseCart} />
