@@ -2,22 +2,25 @@ import { useKeenSlider } from "keen-slider/react";
 import { GetStaticProps } from "next";
 import { Handbag, CaretLeft, CaretRight } from "phosphor-react";
 import { useShoppingCart } from "use-shopping-cart";
-import { MouseEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/future/image";
 import Link from "next/link";
 import Head from "next/head";
 import Stripe from "stripe";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 import { stripe } from "../lib/stripe";
 
 import { Header } from "../components/Header";
 import "keen-slider/keen-slider.min.css";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import {
   ButtonLeft,
   ButtonRight,
   HomeContainer,
   Product,
+  SkeletonContainer,
 } from "../styles/pages/home";
 
 interface HomeProps {
@@ -33,6 +36,7 @@ interface HomeProps {
 
 export default function Home({ products }: HomeProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const { addItem } = useShoppingCart();
   const [sliderRef, instanceRef] = useKeenSlider({
     slides: {
@@ -45,6 +49,10 @@ export default function Home({ products }: HomeProps) {
     },
   });
 
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 2000);
+  }, []);
+
   return (
     <>
       <Head>
@@ -53,45 +61,78 @@ export default function Home({ products }: HomeProps) {
 
       <Header />
 
-      <HomeContainer ref={sliderRef} className="keen-slider">
-        {products.map((product) => {
-          return (
-            <Link
-              key={product.id}
-              href={`product/${product.id}`}
-              prefetch={false}
-            >
-              <Product className="keen-slider__slide">
-                <Image src={product.imageUrl} width={520} height={480} alt="" />
+      {isLoading ? (
+        <HomeContainer>
+          <SkeletonTheme
+            baseColor="#202024"
+            highlightColor="#121214"
+            inline={true}
+          >
+            <SkeletonContainer>
+              <div>
+                <Skeleton height={656} />
+                <p>
+                  <Skeleton width={300} height={32} />
+                  <Skeleton width={100} height={32} />
+                </p>
+              </div>
 
-                <footer>
-                  <div>
-                    <strong>{product.name}</strong>
-                    <span>{product.priceFormatted}</span>
-                  </div>
+              <div>
+                <Skeleton height={656} />
+                <p>
+                  <Skeleton width={300} height={32} />
+                  <Skeleton width={100} height={32} />
+                </p>
+              </div>
+            </SkeletonContainer>
+          </SkeletonTheme>
+        </HomeContainer>
+      ) : (
+        <HomeContainer ref={sliderRef} className="keen-slider">
+          {products.map((product) => {
+            return (
+              <Link
+                key={product.id}
+                href={`product/${product.id}`}
+                prefetch={false}
+              >
+                <Product className="keen-slider__slide">
+                  <Image
+                    src={product.imageUrl}
+                    width={520}
+                    height={480}
+                    alt=""
+                  />
 
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
+                  <footer>
+                    <div>
+                      <strong>{product.name}</strong>
+                      <span>{product.priceFormatted}</span>
+                    </div>
 
-                      addItem({
-                        name: product.name,
-                        id: product.id,
-                        price: product.price,
-                        price_id: product.defaultPriceId,
-                        currency: "BRL",
-                        image: product.imageUrl,
-                      });
-                    }}
-                  >
-                    <Handbag size={32} weight="bold" />
-                  </button>
-                </footer>
-              </Product>
-            </Link>
-          );
-        })}
-      </HomeContainer>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+
+                        addItem({
+                          name: product.name,
+                          id: product.id,
+                          price: product.price,
+                          price_id: product.defaultPriceId,
+                          currency: "BRL",
+                          image: product.imageUrl,
+                        });
+                      }}
+                    >
+                      <Handbag size={32} weight="bold" />
+                    </button>
+                  </footer>
+                </Product>
+              </Link>
+            );
+          })}
+        </HomeContainer>
+      )}
 
       <ButtonLeft
         onClick={() => {

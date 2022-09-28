@@ -116,3 +116,19 @@ export const ButtonRight = styled("button", {
     visibility: "hidden",
   },
 });
+
+export const SkeletonContainer = styled("div", {
+  marginLeft: "12%",
+  display: "flex",
+  gap: "3rem",
+
+  div: {
+    width: 550,
+  },
+
+  p: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "1.5rem",
+  },
+});
